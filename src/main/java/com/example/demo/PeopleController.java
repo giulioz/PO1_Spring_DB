@@ -25,9 +25,38 @@ public class PeopleController {
   }
 
   @RequestMapping(value = "/person", method = RequestMethod.POST)
-  @ResponseBody
-  List<Person> addPerson(@RequestParam String name, @RequestParam String surname) {
+  String addPerson(@RequestParam String name, @RequestParam String surname) {
     personsDB.addPerson(new Person(name, surname));
-    return personsDB.getPersons();
+    return "/";
+  }
+
+  @RequestMapping(value = "/person", method = RequestMethod.DELETE)
+  String deletePerson(@RequestParam String name, @RequestParam String surname) {
+    personsDB.addPerson(new Person(name, surname));
+    return "/";
+  }
+
+  @RequestMapping("/")
+  @ResponseBody
+  String getIndex() {
+    StringBuilder html = new StringBuilder();
+    html.append("<ul>");
+    for (Person p : personsDB.getPersons()) {
+      html.append("<li>" + p.getName() + " " + p.getSurname() + "</li>");
+    }
+    html.append("</ul>");
+    html.append("<button onclick=\"location.reload()\">Aggiorna</button>");
+
+    html.append("<form method=\"POST\" action=\"/person\">");
+    html.append("  <div>");
+    html.append("    Nome: <input type=\"text\" name=\"name\">");
+    html.append("  </div>");
+    html.append("  <div>");
+    html.append("    Cognome: <input type=\"text\" name=\"surname\">");
+    html.append("  </div>");
+    html.append("  <button type=\"submit\">Invia</button>");
+    html.append("</form>");
+
+    return html.toString();
   }
 }
